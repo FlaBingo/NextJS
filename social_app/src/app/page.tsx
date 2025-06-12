@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/themeToggle";
 import {
   SignedIn,
   SignedOut,
@@ -11,12 +13,21 @@ export default function Home() {
     <>
       <header className="flex justify-end items-center p-4 gap-4 h-16">
         <SignedOut>
-          <SignInButton mode="modal"/>
+          <SignInButton mode="modal" />
           <SignUpButton />
         </SignedOut>
         <SignedIn>
           <UserButton />
         </SignedIn>
+
+          <Button variant={"ghost"}>
+            Don't Click Me
+          </Button>
+          <br />
+          <Button variant={"destructive"}>
+            Don't Click Me
+          </Button>
+          <ThemeToggle/>
       </header>
     </>
   );
