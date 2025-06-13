@@ -18,7 +18,6 @@ export const ThemeToggle = () => {
         <MoonIcon className="absolute h-[1.2rem]  w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         <span className="sr-only bg-amber-200">Toggle Theme</span>
       </Button>
-      <h1 className="bg-red-500">hello</h1>
     </>
   );
 };
