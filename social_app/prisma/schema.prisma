@@ -24,18 +24,18 @@ model User {
   image     String?
   location  String?
   website   String?
-  createdAt DateTime @default(now()) //member since 2025
+  createdAt DateTime @default(now()) // member since 2020
   updatedAt DateTime @updatedAt
 
-  //Relations
-  posts    Post[] //One-to-many
-  comments Comment[] //One-to-many
-  likes    Like[] //One-to-many
+  // Relations: 
+  posts    Post[] // One-to-many
+  comments Comment[] // One-to-many
+  likes    Like[] // One-to-many
 
-  followers Follows[] @relation("following") //users who follow this user
+  followers Follows[] @relation("following") // users who follow this user
   following Follows[] @relation("follower") // users this user follows
 
-  notifications        Notification[] @relation("userNotifications") // notificatons received by a user
+  notifications        Notification[] @relation("userNotifications") // notifications received by a user
   notificationsCreated Notification[] @relation("notificationCreator") // notifications triggered by a user
 }
 
@@ -44,12 +44,11 @@ model Post {
   authorId  String
   content   String?
   image     String?
-  createdAt DateTime @default(now()) //member since 2025
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relation
-  author        User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  // Cascade delete means delete all posts if author is deleted
+  // Relations
+  author        User           @relation(fields: [authorId], references: [id], onDelete: Cascade) // cascade delete means delete all posts if author is deleted
   comments      Comment[]
   likes         Like[]
   notifications Notification[]
@@ -62,13 +61,12 @@ model Comment {
   postId    String
   createdAt DateTime @default(now())
 
-  //Relations
+  // Relations
   author        User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
   post          Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
   notifications Notification[]
-  // composite index for faster queries
 
-  @@index([authorId, postId])
+  @@index([authorId, postId]) // composite index for faster queries
 }
 
 model Like {
@@ -81,7 +79,7 @@ model Like {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, postId]) // this prevents same user liking the post twice
+  @@unique([userId, postId]) // this prevents same user liking post twice
   @@index([userId, postId]) // composite index for faster queries
 }
 
@@ -94,7 +92,7 @@ model Follows {
   follower  User @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
   following User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
 
-  @@id([followerId, followingId]) //composite primary key prevents duplicate follows
+  @@id([followerId, followingId]) // composite primary key prevents duplicate follows
   @@index([followerId, followingId]) // composite index for faster queries
 }
 
@@ -108,7 +106,7 @@ model Notification {
   commentId String?
   createdAt DateTime         @default(now())
 
-  //Relations
+  // Relations
   user    User     @relation("userNotifications", fields: [userId], references: [id], onDelete: Cascade)
   creator User     @relation("notificationCreator", fields: [creatorId], references: [id], onDelete: Cascade)
   post    Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
