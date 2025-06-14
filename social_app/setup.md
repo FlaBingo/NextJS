@@ -4,6 +4,10 @@ For prisma installation:
 - npx prisma init
 After creating schemas
 - npx prisma db push
+Got an Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
+- npx prisma generate // still didn't work
+- change import statement from "@prisma/client" to "../generated/prisma" in "./src/lib/prisma.ts"
+
 
 ✔ Your Prisma schema was created at prisma/schema.prisma
   You can now open it in your favorite editor.
