@@ -3,7 +3,7 @@ import { ThemeToggle } from "./themeToggle";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { HomeIcon, BellIcon, UserIcon } from "lucide-react";
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton, UserButton } from "@clerk/nextjs";
 
 async function DesktopNavbar() {
   const user = await currentUser();
@@ -30,14 +30,14 @@ async function DesktopNavbar() {
             <Link
               href={`/profile/${
                 user.username ??
-                user.emailAddresses[0].emailAddress.split("0")[0]
+                user.emailAddresses[0].emailAddress.split("@")[0]
               }`}
             >
               <UserIcon className="w-4 h-4"/>
               <span className="hidden lg:inline">Profile</span>
             </Link>
           </Button>
-          <UserIcon />
+          <UserButton />
         </>
       ) : (
         <SignInButton mode="modal">
