@@ -2,6 +2,8 @@ For prisma installation:
 - npm i prisma --save-dev
 - npm i @prisma/client
 - npx prisma init
+After creating schemas
+- npx prisma db push
 
 ✔ Your Prisma schema was created at prisma/schema.prisma
   You can now open it in your favorite editor.
