@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import {
   getProfileByUsername,
   getUserLikedPosts,
@@ -12,13 +13,17 @@ type Props = {
   params: {
     username: string;
   };
+  searchParams: { [key: string]: string | string[] | undefined};
 };
 
 
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const user = await getProfileByUsername(params.username);
-  if (!user) return;
+  if (!user) return {
+    title: "User not found",
+    description: "The user you're looking for doesn't exist."
+  };;
 
   return {
     title: `${user.name ?? user.username}`,
@@ -29,15 +34,8 @@ export async function generateMetadata({ params }: Props) {
 
 
 
-
-
-
-
-
-
 async function ProfilePageServer({ params }: Props) {
   const user = await getProfileByUsername(params.username);
-
   if (!user) notFound();
 
   const [posts, likedPosts, isCurrentUserFollowing] = await Promise.all([
