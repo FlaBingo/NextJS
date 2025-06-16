@@ -65,7 +65,7 @@ const MobileNavber = () => {
               </>
             ) : (
               <SignInButton mode="modal">
-                <Button variant="default" className="w-full">
+                <Button variant="default" className="w-[80%]">
                   Sign In
                 </Button>
               </SignInButton>
