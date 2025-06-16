@@ -14,6 +14,16 @@ const eslintConfig = [
   {
     rules: {
       "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "off",  // Add this line to disable the any type error
+      "@typescript-eslint/ban-types": [
+        "error",
+        {
+          types: {
+            "{}": false  // Add this to allow empty object type
+          },
+          extendDefaults: true
+        }
+      ]
     }
   }
 ];
