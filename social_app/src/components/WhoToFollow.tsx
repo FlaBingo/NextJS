@@ -7,13 +7,13 @@ import FollowButton from "./FollowButton";
 const WhoToFollow = async () => {
   const users = await getRandomUsers();
   if (users.length === 0 || !users) return (
-    <Card className="sticky top-20">
+    <Card className="sticky top-20 dark:bg-white">
       <img className="rounded-2xl" src="/favicon.png" alt="OnlyFriends" />
     </Card>
   );
 
   return (
-    <Card className="dark:border-white">
+    <Card className="">
       <CardHeader>
         <CardTitle>Who To Follow</CardTitle>
       </CardHeader>
