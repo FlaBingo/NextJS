@@ -39,7 +39,7 @@ const CreatePost = () => {
   };
 
   return (
-    <Card className="mb-4 dark:border-white">
+    <Card className="mb-4">
       <CardContent className="pt-6">
         <div className="space-y-4">
           <div className="flex space-x-4">
@@ -48,7 +48,7 @@ const CreatePost = () => {
             </Avatar>
             <Textarea
               placeholder="what's on your mind?"
-              className="min-h-[100px] resize-none border-none shadow-none focus-visible:ring-0 p-0 text-base"
+              className="min-h-[100px] resize-none shadow-none focus-visible:ring-0 p-2 text-base"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               disabled={isPosting}

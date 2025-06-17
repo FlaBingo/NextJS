@@ -19,7 +19,7 @@ const Sidebar = async () => {
   // console.log({user});
   return (
     <div className="sticky top-20">
-      <Card className="dark:border-white">
+      <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col items-center text-center">
             <Link href={`/profile/${user.username}`}
