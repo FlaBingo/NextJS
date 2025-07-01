@@ -14,6 +14,7 @@ import { InputWithLabel } from "@/components/inputs/inputWithLabel";
 import { TextAreaWithLabel } from "@/components/inputs/TextAreaWithLabel";
 import { SelectWithLabel } from "@/components/inputs/SelectWithLabel";
 import { StatesArray } from "@/constants/StatesArray";
+// import { useKindeBrowserClient } from "@kinde/management-api-js"
 
 type Props = {
   customer?: SelectCustomerSchemaType;
