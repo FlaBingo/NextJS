@@ -3,7 +3,8 @@ import { getTicket } from "@/lib/queries/getTicket";
 import { BackButton } from "@/components/BackButton";
 import TicketForm from "./TicketForm";
 
-
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { Users, init as kindeInit } from "@kinde/management-api-js"
 
 export default async function TicketFormPage({
   searchParams,
@@ -13,59 +14,94 @@ export default async function TicketFormPage({
   try {
     const { customerId, ticketId } = await searchParams;
 
-    if(!customerId && !ticketId){
+    if (!customerId && !ticketId) {
       return (
         <>
-          <h2 className="text-2xl mb-2">Ticket ID or Customer ID required to load ticket form</h2>
-          <BackButton title="Go Back" variant={"default"}/>
+          <h2 className="text-2xl mb-2">
+            Ticket ID or Customer ID required to load ticket form
+          </h2>
+          <BackButton title="Go Back" variant={"default"} />
         </>
-      )
+      );
     }
-    
-    if(customerId){
+
+    const { getPermission, getUser } = getKindeServerSession()
+    const [ managerPermission, user ] = await Promise.all([
+      getPermission("manager"),
+      getUser(),
+    ])
+    const isManager = managerPermission?.isGranted
+
+    if (customerId) {
       const customer = await getCustomer(parseInt(customerId));
-      if(!customer){
+      if (!customer) {
         return (
           <>
-            <h2 className="text-2xl mb-2">Customer ID #{customerId} not found</h2>
+            <h2 className="text-2xl mb-2">
+              Customer ID #{customerId} not found
+            </h2>
             <BackButton title="Go Back" variant={"default"} />
           </>
-        )
+        );
       }
-      if(!customer.active){
+      if (!customer.active) {
         return (
           <>
-            <h2 className="text-2xl mb-2">Customer ID #{customerId} is not active</h2>
+            <h2 className="text-2xl mb-2">
+              Customer ID #{customerId} is not active
+            </h2>
             <BackButton title="Go Back" variant={"default"} />
           </>
-        )
+        );
       }
 
       //return ticket form
-      console.log(customer);
-      return <TicketForm customer={customer} />
+      if(isManager){
+        kindeInit() // Initializes the kinde management api
+        const { users } = await Users.getUsers();
+
+        const techs = users ? users.map(user => ({
+          id: user.email!,
+          description: user.email!,
+        })) : [];
+
+        return <TicketForm customer={customer} techs={techs} />
+      } else {
+        return <TicketForm customer={customer} />;
+      }
     }
 
     // Edit ticket form
-    if(ticketId){
-      const ticket = await getTicket(parseInt(ticketId))
-      if(!ticket){
+    if (ticketId) {
+      const ticket = await getTicket(parseInt(ticketId));
+      if (!ticket) {
         return (
           <>
             <h2 className="text-2xl mb-2">Ticket ID #{ticketId} not found</h2>
             <BackButton title="Go Back" variant={"default"} />
           </>
-        )
+        );
       }
 
-      const customer = await getCustomer(ticket.customerId)
+      const customer = await getCustomer(ticket.customerId);
       //return ticket form
-      console.log("ticket:", ticket)
-      console.log("customer:", customer)
-      return <TicketForm customer={customer} ticket={ticket}/>
+      if(isManager){
+        kindeInit() // Initializes the kinde management api
+        const { users } = await Users.getUsers();
+
+        const techs = users ? users.map(user => ({
+          id: user.email!,
+          description: user.email!,
+        })) : [];
+
+        return <TicketForm customer={customer} ticket={ticket} techs={techs} />
+      } else {
+        const isEditable = user?.email === ticket.tech
+        return <TicketForm customer={customer} ticket={ticket} isEditable={isEditable}/>;
+      }
     }
   } catch (error) {
-    if(error instanceof Error){
+    if (error instanceof Error) {
       throw error;
     }
   }
