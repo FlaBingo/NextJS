@@ -14,13 +14,19 @@ import { InputWithLabel } from "@/components/inputs/inputWithLabel";
 import { TextAreaWithLabel } from "@/components/inputs/TextAreaWithLabel";
 import { SelectWithLabel } from "@/components/inputs/SelectWithLabel";
 import { StatesArray } from "@/constants/StatesArray";
-// import { useKindeBrowserClient } from "@kinde/management-api-js"
+import { CheckboxWithLabel } from "@/components/inputs/CheckboxWithLabel";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 type Props = {
   customer?: SelectCustomerSchemaType;
 };
 
 export default function CustomerForm({ customer }: Props) {
+  const { getPermission, isLoading } = useKindeBrowserClient();
+  const isManager = !isLoading && getPermission("manager")?.isGranted;
+  // const permObj = getPermissions();
+  // const isAuthorized = !isLoading && permObj.permissions.some(perm => perm === "manager" || perm === "admin")
+
   const defaultValues: InsertCustomerSchemaType = {
     id: customer?.id ?? 0,
     firstName: customer?.firstName ?? "",
@@ -33,6 +39,7 @@ export default function CustomerForm({ customer }: Props) {
     state: customer?.state ?? "",
     zip: customer?.zip ?? "",
     notes: customer?.notes ?? "",
+    active: customer?.active ?? true,
   };
 
   const form = useForm<InsertCustomerSchemaType>({
@@ -49,7 +56,8 @@ export default function CustomerForm({ customer }: Props) {
     <div className="flex flex-col gap-1 sm:px-8">
       <div>
         <h2 className="text-2xl font-bold">
-          {customer?.id ? "Edit" : "New"} Customer Form
+          {customer?.id ? "Edit" : "New"} Customer{" "}
+          {customer?.id ? `#${customer.id}` : "Form"}
         </h2>
       </div>
       <Form {...form}>
@@ -82,14 +90,13 @@ export default function CustomerForm({ customer }: Props) {
               fieldTitle="City"
               nameInSchema="city"
             />
-            
+
             <SelectWithLabel<InsertCustomerSchemaType>
               fieldTitle={"State"}
               nameInSchema="state"
               data={StatesArray}
             />
           </div>
-
 
           <div className="flex flex-col gap-4 w-full max-w-xs">
             <InputWithLabel<InsertCustomerSchemaType>
@@ -112,6 +119,15 @@ export default function CustomerForm({ customer }: Props) {
               nameInSchema="notes"
               className="h-40"
             />
+            {isLoading ? (
+              <p>Loading...</p>
+            ) : isManager ? (
+              <CheckboxWithLabel<InsertCustomerSchemaType>
+                fieldTitle="Acitive"
+                nameInSchema="active"
+                message="Yes"
+              />
+            ) : null}
 
             <div className="flex justify-between">
               <Button
