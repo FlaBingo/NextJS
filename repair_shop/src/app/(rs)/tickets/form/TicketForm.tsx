@@ -58,8 +58,11 @@ export default function TicketForm({
     <div className="flex flex-col gap-1 sm:px-8">
       <div>
         <h2 className="text-2xl font-bold">
-          {ticket?.id ? "Edit" : "New"} Ticket{" "}
-          {ticket?.id ? `# ${ticket.id}` : "Form"}
+          {ticket?.id && isEditable
+            ? `Edit Ticket # ${ticket.id}`
+            : ticket?.id
+            ? `View Ticket # ${ticket.id}`
+            : "New Ticket Form"}
         </h2>
       </div>
       <Form {...form}>
@@ -130,26 +133,24 @@ export default function TicketForm({
 
             {isEditable ? (
               <div className="flex justify-between">
-              <Button
-                type="submit"
-                className="w-3/4"
-                variant={"default"}
-                title="Save"
-              >
-                Save
-              </Button>
-              <Button
-                type="button"
-                variant={"destructive"}
-                title="Reset"
-                onClick={() => form.reset(defaultValues)}
-              >
-                Reset
-              </Button>
-            </div>
+                <Button
+                  type="submit"
+                  className="w-3/4"
+                  variant={"default"}
+                  title="Save"
+                >
+                  Save
+                </Button>
+                <Button
+                  type="button"
+                  variant={"destructive"}
+                  title="Reset"
+                  onClick={() => form.reset(defaultValues)}
+                >
+                  Reset
+                </Button>
+              </div>
             ) : null}
-
-            
           </div>
         </form>
       </Form>
