@@ -56,7 +56,7 @@ export default function TicketForm({
 
   return (
     <div className="flex flex-col gap-1 sm:px-8">
-      <div>
+      <div className="my-4">
         <h2 className="text-2xl font-bold">
           {ticket?.id && isEditable
             ? `Edit Ticket # ${ticket.id}`
