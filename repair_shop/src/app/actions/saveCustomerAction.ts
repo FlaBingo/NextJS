@@ -19,6 +19,7 @@ export const saveCustomerAction = actionClient
   .action(async ({
     parsedInput: customer
   }: { parsedInput: InsertCustomerSchemaType }) => {
+    
     const { isAuthenticated } = getKindeServerSession()
 
     const isAuth = await isAuthenticated()
