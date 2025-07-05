@@ -17,6 +17,12 @@ import { TextAreaWithLabel } from "@/components/inputs/TextAreaWithLabel";
 import { SelectWithLabel } from "@/components/inputs/SelectWithLabel";
 import { CheckboxWithLabel } from "@/components/inputs/CheckboxWithLabel";
 
+import { toast } from "sonner";
+import { useAction } from "next-safe-action/hooks";
+import { saveTicketAction } from "@/app/actions/saveTicketAction";
+import { LoaderCircle } from "lucide-react";
+import { DisplayServerActionResponse } from "@/components/DisplayServerActionResponse";
+
 type Props = {
   customer: SelectCustomerSchemaType;
   ticket?: SelectTicketSchemaType;
@@ -50,12 +56,40 @@ export default function TicketForm({
     defaultValues,
   });
 
+  const {
+    execute: executeSave,
+    result: saveResult,
+    isExecuting: isSaving,
+    reset: resetSaveAction,
+  } = useAction(saveTicketAction, {
+    onSuccess({ data }) {
+      toast("Success! 🎉", {
+        description: data?.message,
+        action: {
+          label: "OK",
+          onClick: () => console.log("ok"),
+        },
+      });
+    },
+    onError({ error }) {
+      toast("Error", {
+        description: "Save Failed",
+        action: {
+          label: "OK",
+          onClick: () => console.log(error),
+        },
+      });
+    },
+  });
+
   async function submitForm(data: InsertTicketSchemaType) {
-    console.log(data);
+    // console.log(data);
+    executeSave(data)
   }
 
   return (
     <div className="flex flex-col gap-1 sm:px-8">
+      <DisplayServerActionResponse result={saveResult} />
       <div className="my-4">
         <h2 className="text-2xl font-bold">
           {ticket?.id && isEditable
@@ -138,14 +172,22 @@ export default function TicketForm({
                   className="w-3/4"
                   variant={"default"}
                   title="Save"
+                  disabled={isSaving}
                 >
-                  Save
+                  {isSaving ? (
+                    <>
+                      <LoaderCircle className="animate-spin" /> Saving
+                    </>
+                  ) : "Save"}
                 </Button>
                 <Button
                   type="button"
                   variant={"destructive"}
                   title="Reset"
-                  onClick={() => form.reset(defaultValues)}
+                  onClick={() => {
+                    form.reset(defaultValues)
+                    resetSaveAction()
+                  }}
                 >
                   Reset
                 </Button>
